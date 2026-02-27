@@ -4,6 +4,7 @@ import threading
 PORT = 5050
 HEADER = 64
 DISCONNECT_MESSAGE = "!DISCONNECTED"
+INVALID_MESSAGE = "!INVALID MESSAGE"
 FORMAT = "utf-8"
 SERVER = socket.gethostbyname(socket.gethostname())
 ADDR = (SERVER, PORT)
@@ -27,6 +28,17 @@ def handle_request(conn, addr):
             msg = conn.recv(msg_length).decode(FORMAT)
             if msg == DISCONNECT_MESSAGE:
                 connected = False
+            else:
+                response = str(msg[1:-1].strip())
+                if (msg[0] == 'A'):
+                    response = sorted(response, reverse=True)
+                elif (msg[0] == 'C'):
+                    response = sorted(response)
+                elif (msg[0] == 'D'):
+                    response = response.upper()
+                else:
+                    response = msg[0] + response
+                conn.send(str(response).encode(FORMAT))
             print(f"[{addr}] {msg}")
     conn.close()
 
