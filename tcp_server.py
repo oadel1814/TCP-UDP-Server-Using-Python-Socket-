@@ -13,7 +13,6 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
 
 def handle_request(conn, addr):
-    """"handle requests comming from the client"""
     print(f"[NEW CONNECTION] {addr} connected.")
     connected = True
     
@@ -29,7 +28,7 @@ def handle_request(conn, addr):
             
             if msg == DISCONNECT_MESSAGE:
                 connected = False
-                print(f"[{addr}] Disconnected gracefully.")
+                print(f"[{addr}] Disconnected.")
             else:
                 if len(msg) > 0:
                     response = str(msg[1:].strip())
@@ -50,7 +49,7 @@ def handle_request(conn, addr):
             print(f"[{addr}] {msg}")
             
     except ConnectionResetError:
-        print(f"[ERROR] Connection with {addr} was abruptly lost.")
+        print(f"[ERROR] Connection with {addr} was lost.")
     except Exception as e:
         print(f"[ERROR] An unexpected error occurred with {addr}: {e}")
     finally:
@@ -59,7 +58,7 @@ def handle_request(conn, addr):
 
 def start():
     server.listen()
-    print(f"[SERVER IS LISTENING] on {SERVER}:{PORT}")
+    print(f"[TCP SERVER IS LISTENING] on {SERVER}:{PORT}")
 
     while True:
         conn, addr = server.accept()
@@ -67,5 +66,5 @@ def start():
         thread.start()
         print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
-print("[STARTING] server is starting.....")
+print("[STARTING] TCP server is starting.....")
 start()
